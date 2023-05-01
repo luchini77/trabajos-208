@@ -4,14 +4,14 @@
             type="text"
             placeholder="Filtrar por Nivel"
             v-model="nivel"
-            @keyup="filtrar()"
+            @keyup="filtrar"
         >
     </div>
 </template>
 
 <script setup>
-import { useTareaStore } from '../stores/tarea';
 import { ref } from 'vue'
+import { useTareaStore } from '../stores/tarea';
 
 const storeTarea = useTareaStore()
 

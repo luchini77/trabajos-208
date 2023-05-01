@@ -1,7 +1,7 @@
 <template>
     <div class="container">
-        <p v-if="allTareas.length === 0">No hay tareas...</p>
-        <div class="tarea" v-for="tarea in allTareas" :key="tarea.id">
+        <p v-if="tareas.length === 0">No hay tareas...</p>
+        <div class="tarea" v-for="tarea in tareas" :key="tarea.id">
             <p class="tarea_titulo">{{ tarea.titulo }} - {{ tarea.nivel }}</p>
             <p class="tarea_text">{{ tarea.tarea }}</p>
             <span>{{ formatDate(tarea.fechaCreacion) }}</span>
@@ -15,7 +15,7 @@
 
 <script setup>
 import { useTareaStore } from '../stores/tarea';
-import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import dayjs from 'dayjs'
 import { onMounted } from 'vue';
 import Swal from 'sweetalert2'
@@ -24,11 +24,14 @@ import { useRouter } from 'vue-router';
 const storeTarea = useTareaStore()
 const router = useRouter()
 
-const { allTareas } = storeToRefs(storeTarea);
-
 const formatDate = (fecha) => {
     return dayjs(fecha).format("DD/MM/YYYY")
 }
+
+const tareas = computed(() => {
+    return storeTarea.tareasFiltradas.reverse()
+})
+
 
 onMounted(async() => {
     await storeTarea.cargarTareas()

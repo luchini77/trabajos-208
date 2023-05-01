@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import router from '../router/index'
 
@@ -6,9 +6,7 @@ export const useTareaStore = defineStore('tarea', () => {
 
   const tareas = ref([])
   const tarea = ref([])
-
-
-  const allTareas = computed(() => tareas.value.reverse())
+  const tareasFiltradas = ref([])
 
 
   const cargarTareas = async () => {
@@ -24,6 +22,7 @@ export const useTareaStore = defineStore('tarea', () => {
       }
 
       tareas.value = arrayTareas
+      tareasFiltradas.value = arrayTareas
 
     } catch (error) {
       console.log(error)
@@ -57,7 +56,7 @@ export const useTareaStore = defineStore('tarea', () => {
         method: 'DELETE'
       })
 
-      tareas.value = tareas.value.filter(item => item.id !== id)
+      tareasFiltradas.value = tareasFiltradas.value.filter(item => item.id !== id)
 
     } catch (error) {
       console.log(error)
@@ -93,27 +92,28 @@ export const useTareaStore = defineStore('tarea', () => {
     } catch (error) {
       console.log(error)
     }
-  }
-
+  };
+  
   const filtrarNombre = (texto) => {
-    let nivelInput = texto.toLowerCase();
-    const filtro = tareas.value.filter(tarea => {
-      let nivelApi = tarea.nivel.toLowerCase();
+    const filtro = tareas.value.filter((tarea) => {
+      const nivelApi = tarea.nivel.toLowerCase()
+
+      const nivelInput = texto.toLowerCase();
 
       if(nivelApi.includes(nivelInput)){
         return tarea;
       }
-    })
+    });
 
-    tareas.value = filtro
-
-  }
+    tareasFiltradas.value = filtro
+  };
 
 
   return {
     tarea,
+    tareas,
+    tareasFiltradas,
     getTarea,
-    allTareas,
     eliminar,
     cargarTareas,
     buscarTarea,
